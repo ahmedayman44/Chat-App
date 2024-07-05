@@ -1,10 +1,11 @@
+import 'package:chat_setup/blocs/auth_bloc/auth_bloc.dart';
+
 import '../constan.dart';
 import '../cubits/chat_cubit/chat_cubit_cubit.dart';
-import '../cubits/login_cubit/login_cubit.dart';
+
 import '../helper/show_snack.dart';
 import 'chat_screen.dart';
 import 'signup.dart';
-
 import '../widget/Custom_TextField.dart';
 import '../widget/Custom_Container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +26,7 @@ class LogIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginCubit, LoginState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is LoginLoading) {
           loading = true;
@@ -107,31 +108,8 @@ class LogIn extends StatelessWidget {
                   CustomContainer(
                     onTap: () async {
                       if (formKey.currentState!.validate()) {
-                        BlocProvider.of<LoginCubit>(context).loginUser(
-                          email: email!,
-                          password: password!,
-                        );
-                        // loading = true;
-
-                        // try {
-                        //   await loginUser();
-
-                        //   Navigator.of(context)
-                        //       .push(MaterialPageRoute(builder: (context) {
-                        //     return ChatPage();
-                        //   }));
-                        // } on FirebaseAuthException catch (e) {
-                        //   if (e.code == 'user-not-found') {
-                        //     showSnaackBar(
-                        //         context, 'No user found for that email.');
-                        //   } else if (e.code == 'wrong-password') {
-                        //     showSnaackBar(
-                        //         context, 'Wrong password for that user.');
-                        //   }
-                        // } catch (e) {
-                        //   return showSnaackBar(context, 'there was an error');
-                        // }
-                        // loading = false;
+                        BlocProvider.of<AuthBloc>(context).add(
+                            LoginEvent(email: email!, password: password!));
                       }
                     },
                     textButton: 'LogIn',
