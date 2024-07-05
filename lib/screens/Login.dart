@@ -1,13 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
+import '../constan.dart';
+import '../cubits/chat_cubit/chat_cubit_cubit.dart';
+import '../cubits/login_cubit/login_cubit.dart';
+import '../helper/show_snack.dart';
+import 'chat_screen.dart';
+import 'signup.dart';
 
-import 'package:chat_setup/constan.dart';
-import 'package:chat_setup/cubits/login_cubit/login_cubit.dart';
-import 'package:chat_setup/helper/show_snack.dart';
-import 'package:chat_setup/screens/chat_screen.dart';
-import 'package:chat_setup/screens/signup.dart';
-
-import 'package:chat_setup/widget/Custom_TextField.dart';
-import 'package:chat_setup/widget/Custom_Container.dart';
+import '../widget/Custom_TextField.dart';
+import '../widget/Custom_Container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,21 +21,26 @@ class LogIn extends StatelessWidget {
 
   bool loading = false;
 
+  LogIn({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
+    return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginLoading) {
           loading = true;
         } else if (state is LoginSuccess) {
+          BlocProvider.of<ChatCubit>(context).getMessages();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ChatPage()),
           );
-        } else if (state is LoginFailure){
-     showSnaackBar(context, state.errMessage);
+          loading = false;
+        } else if (state is LoginFailure) {
+          showSnaackBar(context, state.errMessage);
         }
+        loading = false;
       },
-      child: ModalProgressHUD(
+      builder: (context, state) => ModalProgressHUD(
         inAsyncCall: loading,
         child: Scaffold(
           backgroundColor: kPrimaryColor,
@@ -170,7 +174,8 @@ class LogIn extends StatelessWidget {
   }
 
   Future<void> loginUser() async {
-    final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    UserCredential user =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email!,
       password: password!,
     );

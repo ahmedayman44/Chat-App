@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../constan.dart';
 import '../models/models.dart';
-import 'package:flutter/material.dart';
 
 class CustomChatContainer extends StatelessWidget {
   const CustomChatContainer({
@@ -48,8 +49,8 @@ class CustomChatContainerForFriend extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        padding: EdgeInsets.only(left: 15, top: 25, right: 25, bottom: 25),
-        margin: EdgeInsets.all(11),
+        padding: const EdgeInsets.only(left: 15, top: 25, right: 25, bottom: 25),
+        margin: const EdgeInsets.all(11),
         decoration: const BoxDecoration(
           color: Colors.amber,
           borderRadius: BorderRadius.only(
